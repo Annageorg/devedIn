@@ -46,7 +46,8 @@ router.post(
                     r: "pg",
                     d: "retro"
                 },
-                true)
+                true
+            )
 
             user = new User({
                 name,
