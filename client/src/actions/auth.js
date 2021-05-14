@@ -25,6 +25,8 @@ export const loadUser = () => async dispatch => {
         })
         
     } catch(err) {
+        localStorage.removeItem('token');
+
         dispatch({
             type: AUTH_ERROR
         })
@@ -44,6 +46,9 @@ export const register = ({ name, email, password }) => async dispatch => {
     try {
         const res = await axios.post('/api/users', body, config);
 
+        const { token } = res.data;
+        localStorage.setItem('token', token);
+
         dispatch({
             type: REGISTER_SUCCESS,
             payload: res.data
@@ -57,6 +62,8 @@ export const register = ({ name, email, password }) => async dispatch => {
         if (errors) {
             errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
         }
+
+        localStorage.removeItem('token');
 
         dispatch({
             type: REGISTER_FAIL
@@ -77,6 +84,9 @@ export const login = (email, password) => async dispatch => {
     try {
         const res = await axios.post('/api/auth', body, config);
 
+        const { token } = res.data;
+        localStorage.setItem('token', token);
+
         dispatch({
             type: LOGIN_SUCCESS,
             payload: res.data
@@ -91,6 +101,8 @@ export const login = (email, password) => async dispatch => {
             errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
         }
 
+        localStorage.removeItem('token');
+
         dispatch({
             type: LOGIN_FAIL
         })
@@ -99,5 +111,7 @@ export const login = (email, password) => async dispatch => {
 
 //Logout / Clear profile
 export const logout = () => dispatch => {
+    localStorage.removeItem('token');
+    
     dispatch ({ type: LOGOUT });
 }
